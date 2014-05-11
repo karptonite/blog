@@ -1,12 +1,14 @@
 ---
 layout: post
 title: "Rehashing Password Hashes"
+date: 2014-05-11T15:07:31-04:00
 ---
 
 Every time a prominent website has their user database stolen, the question of
 how the passwords were stored comes up. Even properly hashed password tables
 are vulnerable to some attacks, but the better the hashing algorithm, the less
 the risk to your users.
+
 
 Tools have come a long way. In the PHP world, we now have the `password_hash()`
 function [built into PHP
@@ -78,17 +80,18 @@ Notice what we've done here: We don't have the user's password, but we do have a
 that we know can be generated from the password and the proper salt. We've treated that
 hash as the _password_ for the new, improved hashing system. We know that when the user
 does type in their password, we will be able to regenerate that hash because we
-still have the salt.
+still have the salt. Once the user does log in, you can hash the plain text password
+with `password_hash()`, and upgrade the password version accordingly. That way, if you ever drop
+support for the old password system entirely, anyone who's logged in since then will have
+their password saved in the new format.
 
 Now for the important part: you can delete the old password hashes (but not the
-salts) from the database. All users are now protected by the new password
-hashing algorithm, even if they never log in again.
+salts) from the database and any backups. All users are now protected by the
+new password hashing algorithm, even if they never log in again.
 
-Note that in practice, some legacy systems will have saved the salt and the hash
-as part of the same string, but these should be separable. The important thing is to keep the salt
-but discard the old hash.
+Note that in practice, some legacy systems will have saved the salt and the
+hash as part of the same string, but these should be separable. The important
+thing is to keep the salt but discard the old hash.
 
-Once the original passwords are deleted, ALL of your users should benefit from the improved hashing
-algorithm, not just those who log in again.
-
-Note: I am by no means a security expert. If I'm wrong about something in this article, please tell me!
+Once the original passwords are deleted, ALL of your users should benefit from
+the improved hashing algorithm, not just those who log in again.
