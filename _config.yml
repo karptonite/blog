@@ -1,0 +1,11 @@
+# Site settings
+title: Daniel Karp's Blog
+email: danielkarp@gmail.com
+username: karptonite
+description: "Daniel Karp writes about programming and whatever else he feels like writing about"
+baseurl: ""
+url: "http://karptonite.com"
+
+# Build settings
+markdown: redcarpet
+permalink: pretty
