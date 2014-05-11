@@ -14,12 +14,13 @@ function [built into PHP
 of us work on websites which have a table of old passwords hashed by older,
 less secure tools or by some home-brewed hashing system. When I read about
 methods of upgrading old systems, the recommendation I sometimes see is that
-the best you can do is have a system that validates passwords when users log in
-using the old system, then silently rehashes them with the new improved
-algorithm.  Unfortunately, this leaves infrequent users, or users who created
-accounts and never logged in again, more vulnerable, should your database be
-compromised.  But you can't create the correct new hash without the original
-password,
+the best you can do to correct this situation is have a system that validates
+passwords when users log in using the old system, then [silently
+rehashes](https://github.com/jeremykendall/password-validator#upgrading-legacy-passwords)
+them with the new improved algorithm.  Unfortunately, this leaves infrequent
+users, or users who created accounts and never logged in again, more
+vulnerable, should your database be compromised.  But you can't create the
+correct new hash without the original password,
 [right](http://blog.stidges.com/post/upgrading-legacy-passwords-with-laravel)?
 
 This is absolutely correct;
@@ -73,15 +74,19 @@ public function checkUserPassword($user, $password)
    // else, use password_verify() as normal
 }
 {% endhighlight %}
-Notice what we've done here: We don't have the user's password, but we have a hash
+Notice what we've done here: We don't have the user's password, but we do have a hash
 that we know can be generated from the password and the proper salt. We've treated that
 hash as the _password_ for the new, improved hashing system. We know that when the user
 does type in their password, we will be able to regenerate that hash because we
 still have the salt.
 
-Now for the important part: you can delete the old password hashes (but not the salts) from
-the database. In practice, some systems save the salt and the hash as part of the same string,
-but these should be separable.
+Now for the important part: you can delete the old password hashes (but not the
+salts) from the database. All users are now protected by the new password
+hashing algorithm, even if they never log in again.
+
+Note that in practice, some legacy systems will have saved the salt and the hash
+as part of the same string, but these should be separable. The important thing is to keep the salt
+but discard the old hash.
 
 Once the original passwords are deleted, ALL of your users should benefit from the improved hashing
 algorithm, not just those who log in again.
