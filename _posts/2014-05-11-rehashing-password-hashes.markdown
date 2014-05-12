@@ -90,8 +90,15 @@ Note that in practice, some legacy systems will have saved the salt and the
 hash as part of the same string, but these should be separable. The important
 thing is to keep the salt but discard the old hash.
 
-Once the original passwords are deleted, ALL of your users should benefit from
+Once the original password hashes are deleted, ALL of your users should benefit from
 the improved hashing algorithm, not just those who log in again.
+
+Last minute thought: This functionality could be built into the PHP password
+hashing API directly for hashes originally created by the API.  A
+`password_rehash()` function would take a password hash created with a
+now-deprecated algorithm, rehash the hash as described in this post via the new
+algorithm, and store both the old and new salt (and algorithm codes) in the new
+password hash string, such that `password_verify()` could verify it.
 
 [^1]: The first time a user logs in under the new system, you can hash the plain text password with `password_hash()`, and upgrade the password version accordingly. That way, if you ever drop support for the old password system entirely, anyone who's logged in since then will have their password saved in the new format. However, it is not necessary to wait for them to log in to delete the original hash.
 
