@@ -2,10 +2,10 @@
 title: Daniel Karp's Blog
 email: danielkarp@gmail.com
 username: karptonite
-description: "Daniel Karp writes about programming and whatever else he feels like writing about"
+description: "Daniel writes about programming, mostly. Please excuse the mess!"
 baseurl: ""
 url: "http://karptonite.com"
 
 # Build settings
-markdown: redcarpet
+markdown: kramdown
 permalink: pretty
